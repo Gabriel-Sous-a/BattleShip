@@ -11,38 +11,71 @@ public class Game {
     public void run() {
         player1.board();
         player2.board();
+        System.out.println("Player 1 name");
+        String name = scan.next();
+        player1.setName(name);
+        System.out.println("Player 2 name");
+        name = scan.next();
+        player2.setName(name);
         putShips(player1);
         printSpace();
         System.out.println("Now your turn player 2");
         putShips(player2);
         printSpace();
         System.out.println("Game Time");
-        while (true) {
+        while (player1.getCounterWin() != 4 || player2.getCounterWin() != 4) {
             System.out.println("What position to attack? P1");
             player1.tacticalBoard();
-            System.out.println("player2 board");
-            player2.tacticalBoard();
-            String attackPostition = scan.next();
-            if (attack(player1, player2, attackPostition)){
-                System.out.println("Attack Again");
-                attackPostition = scan.next();
-                attack(player1, player2, attackPostition);
+            //System.out.println("player2 board");
+            //player2.tacticalBoard();
+            attackRep(player1, player2, "1");
+            if (player1.getCounterWin() == 4 || player2.getCounterWin() == 4){
+                break;
             }
             printSpace();
             System.out.println("Your turn P2");
             player2.tacticalBoard();
-            System.out.println("player1 board");
-            player1.tacticalBoard();
-            attackPostition = scan.next();
-            if (attack(player2, player1, attackPostition)){
-                System.out.println("Attack Again");
-                attackPostition = scan.next();
-                attack(player2, player1, attackPostition);
-            }
+            //System.out.println("player1 board");
+            //player1.tacticalBoard();
+            attackRep(player2, player1, "2");
             printSpace();
-            if (player1.getCounterWin() == 14 || player2.getCounterWin() == 14) {
-                break;
+        }
+        System.out.println(checkPlayer(player1, player2).getName() + " Won");
+    }
+
+    public boolean attackRep (Board player1, Board player2, String whatPlayer) {
+        if (whatPlayer.equals("1")){
+            if (player1.getCounterWin() == 4 || player2.getCounterWin() == 4){
+                return false;
             }
+            System.out.println("Attack");
+            String attackPosition = scan.next();
+            if (attack(player1, player2, attackPosition)) {
+                player1.tacticalBoard();
+                //System.out.println("player2 board");
+                //player2.tacticalBoard();
+                return attackRep(player1, player2, "1");
+            }
+            player1.tacticalBoard();
+            System.out.println("player2 board");
+            player2.tacticalBoard();
+            return false;
+        } else {
+            if (player1.getCounterWin() == 4 || player2.getCounterWin() == 4){
+                return false;
+            }
+            System.out.println("Attack");
+            String attackPosition = scan.next();
+            if (attack(player1, player2, attackPosition)) {
+                //player1.tacticalBoard();
+                //System.out.println("player2 board");
+                player2.tacticalBoard();
+                return attackRep(player1, player2, "2");
+            }
+            player1.tacticalBoard();
+            System.out.println("player2 board");
+            player2.tacticalBoard();
+            return false;
         }
     }
 
@@ -84,8 +117,8 @@ public class Game {
     }
 
     public void print() {
-        for (int i = 0; i < holder.size(); i++) {
-            System.out.println(holder.get(i).getName());
+        for (Ships ships : holder) {
+            System.out.println(ships.getName());
         }
     }
 
@@ -149,12 +182,10 @@ public class Game {
     }
 
     public boolean check(int indexFirst, int indexLast, Board playerT, Board player) {
-        int counter = 0;
         if (playerT.getGrid()[indexFirst][indexLast].equals("O")) {
             playerT.getGrid()[indexFirst][indexLast] = "X";
             player.getTacticalGrid()[indexFirst][indexLast] = "X";
-            counter++;
-            player.setCounterWin(counter);
+            player.setCounterWin(player.getCounterWin()+1);
             return true;
         }
         if (playerT.getGrid()[indexFirst][indexLast].equals(" ")) {
@@ -182,15 +213,20 @@ public class Game {
     }
 
     public boolean attack(Board player, Board playerT, String position) {
-        if (check(separateInt(position), searchLetter(separateString(position)), playerT, player)) {
-            return true;
-        }
-        return false;
+        return check(separateInt(position), searchLetter(separateString(position)), playerT, player);
     }
 
     public void printSpace() {
         for (int i = 0; i < 40; i++) {
             System.out.println();
+        }
+    }
+
+    public Board checkPlayer(Board player1, Board player2){
+        if (player1.getCounterWin() < player2.getCounterWin()){
+            return player2;
+        }else {
+            return player1;
         }
     }
 }

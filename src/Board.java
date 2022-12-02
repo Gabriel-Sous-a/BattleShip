@@ -1,5 +1,7 @@
 public class Board {
-    static String meh = " ";
+
+
+    private String name;
     private String grid[][] = new String[10][10];
     private String tacticalGrid[][] = new String[10][10];
 
@@ -91,5 +93,13 @@ public class Board {
 
     public void setCounterWin(int counterWin) {
         this.counterWin = counterWin;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }
