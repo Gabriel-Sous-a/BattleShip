@@ -1,5 +1,9 @@
-public class NoahsArk extends  Ships {
-    private String name = "NoahsArk";
+package Fleet;
+
+import Fleet.Ships;
+
+public class NoahsArk extends Ships {
+    private String name = "NOAHSARK";
     private int occupy = 5;
     private int uses = 1;
 

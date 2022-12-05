@@ -1,3 +1,5 @@
+package Fleet;
+
 public class Ships{
     private String name;
     private int occupy;
